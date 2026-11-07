@@ -1,0 +1,43 @@
+{
+  "title": "What does a shirt cost?",
+  "capture": [
+    { "goto": "/prices.html" },
+    { "shot": "s0", "boxes": { "title": { "text": "Price finder" }, "shirts": { "button": "Shirts" } } },
+    { "tap": { "button": "Shirts" }, "wait": 500 },
+    { "shot": "s1", "boxes": { "press": { "button": "Wash & press" } } },
+    { "tap": { "button": "Wash & press" }, "wait": 700 },
+    { "shot": "s2", "boxes": { "result": { "css": "#result" } } },
+    { "goto": "/about.html" },
+    { "shot": "s3", "boxes": { "fast": { "css": "#fast" } } },
+    { "goto": "/" },
+    { "shot": "s4", "boxes": { "pickup": { "css": "#pickup" } } }
+  ],
+  "audio": {
+    "plan": [["h", 0, 1.05], ["q", 0.1, 1.08], ["t", 0.14, 1.05], ["v", 0.14, 1.05], ["p", 0.14, 1.05], ["c", 0.2, 1.0], ["x", 0.2, 1.0]],
+    "hits": ["q", "v"],
+    "taps": { "shirts": ["t", 5], "press": ["t", -1] },
+    "bell": "x"
+  },
+  "captions": [
+    { "place": "hook", "lines": [["Shirts piling up", -1, "accent"], ["again?", "h.w3"]] },
+    { "from": "q-0.03", "lines": [["What does a shirt cost", -1], ["washed & pressed?", "q.w7", "accent"]] },
+    { "from": "t-0.03", "lines": [["2 taps on Juniper Lane", -1], ["1. Shirts", "tap:shirts", "accent"], ["2. Wash & press", "tap:press", "accent"]] },
+    { "from": "v-0.03", "lines": [["$2.50", -1, "light", 1.3], ["a shirt · washed & pressed", -1, "ink", 0.6], ["Most back in 48 hours", "v.w5", "accent"]] },
+    { "from": "p-0.03", "lines": [["Free pickup & delivery", -1], ["on orders over $30", "p.w5", "accent"]] }
+  ],
+  "shots": [
+    { "from": "q-0.03", "img": "s0", "y": 0 },
+    { "from": "tap:shirts-0.45", "box": "s0.shirts", "z": 1.25, "dur": 0.42, "tap": "tap:shirts" },
+    { "from": "tap:shirts+0.2", "img": "s1", "box": "s1.press", "z0": 1.15, "z": 1.25, "dur": 0.3, "tap": "tap:press" },
+    { "from": "tap:press+0.22", "img": "s2", "box": "s2.result", "z0": 1.1, "z": 1.2, "dim": 0.6 },
+    { "from": "v.w5-0.1", "img": "s3", "box": "s3.fast", "z": 1.1, "dim": 0.5 },
+    { "from": "p-0.03", "img": "s4", "box": "s4.pickup", "z": 1.1, "dim": 0.5 }
+  ],
+  "note": { "from": "v-0.03", "to": "c-0.1" },
+  "end": {
+    "from": "c-0.1",
+    "url_at": "c.w0",
+    "teaser": { "kicker": "Next time", "text": "What does a duvet cost?", "at": "x" }
+  },
+  "cover": { "at": "v.e-0.3", "lines": [["What does a shirt cost", -1, "accent"], ["at Juniper Lane?", -1]] }
+}

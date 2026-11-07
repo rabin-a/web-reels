@@ -1,0 +1,29 @@
+:root{--green:#1F6F5C;--gold:#F2B544;--ink:#14211D;--paper:#FBFAF6;--line:#E3E0D6}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.5}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);text-decoration:none}
+.brand img{width:34px;height:34px}
+nav a{margin-left:14px;color:var(--green);font-weight:600;text-decoration:none;font-size:15px}
+main{max-width:720px;margin:0 auto;padding:22px 18px 40px}
+h1{font-size:30px;line-height:1.15;margin:8px 0 10px}
+h2{font-size:21px;margin:30px 0 10px}
+.lead{font-size:17px;color:#3B4A45}
+.cta{display:inline-block;margin-top:12px;padding:12px 18px;border-radius:12px;background:var(--green);color:#fff;font-weight:700;text-decoration:none}
+.cards{display:grid;gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card h3{margin:0 0 4px;font-size:17px}
+.card p{margin:0;color:#3B4A45}
+.pill{display:inline-block;background:#E8F2EE;color:var(--green);font-weight:700;border-radius:999px;padding:3px 10px;font-size:13px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.opt{font:inherit;font-size:16px;font-weight:700;padding:14px 10px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.opt.on{border-color:var(--green);background:#E8F2EE}
+.result{display:none;margin-top:14px;border-radius:16px;background:var(--green);color:#fff;padding:16px 18px}
+.result.show{display:block}
+.result .price{font-size:34px;font-weight:800;line-height:1.1;margin:4px 0}
+.result small{opacity:.9}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{background:#F3F1EA}
+.note{font-size:14px;color:#5A6762;margin-top:10px}
+footer{border-top:1px solid var(--line);padding:18px;font-size:13px;color:#5A6762;text-align:center}

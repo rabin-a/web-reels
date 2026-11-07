@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1F6F5C"><link rel="icon" href="logo.svg"><link rel="stylesheet" href="style.css"><title>Prices | Juniper Lane Laundry</title></head><body>
+<header><a class="brand" href="index.html"><img src="logo.svg" alt="Juniper Lane Laundry logo">Juniper Lane</a><nav><a href="prices.html">Prices</a><a href="about.html">About</a></nav></header>
+<main>
+<h1>Price finder</h1>
+<p class="lead">Two taps: what we are cleaning, then how.</p>
+<h2 id="step1">1. What are we cleaning?</h2>
+<div class="opts" id="what">
+<button type="button" class="opt" data-what="shirts">Shirts</button>
+<button type="button" class="opt" data-what="bedding">Bedding</button>
+<button type="button" class="opt" data-what="suits">Suits</button>
+<button type="button" class="opt" data-what="weight">By weight</button>
+</div>
+<h2 id="step2">2. How should we clean it?</h2>
+<div class="opts" id="how">
+<button type="button" class="opt" data-how="press">Wash &amp; press</button>
+<button type="button" class="opt" data-how="dry">Dry clean</button>
+</div>
+<div class="result" id="result"><small id="rlabel"></small><div class="price" id="rprice"></div><small id="rnote"></small></div>
+<h2>All prices</h2>
+<table id="table">
+<tr><th>Item</th><th>Wash &amp; press</th><th>Dry clean</th></tr>
+<tr><td>Shirt</td><td>$2.50</td><td>$4.00</td></tr>
+<tr><td>Duvet, any size</td><td>$18</td><td>$24</td></tr>
+<tr><td>Two-piece suit</td><td>Dry clean only</td><td>$14</td></tr>
+<tr><td>Wash &amp; fold by weight</td><td>$1.80 per lb, 10 lb minimum</td><td>n/a</td></tr>
+</table>
+<p class="note" id="guide">Prices are a guide. We confirm the final price at pickup.</p>
+</main>
+<footer>Juniper Lane Laundry is a fictional business made for the web-reels demo. Nothing on this site can be ordered. <a href="terms.html">Terms</a></footer>
+<script>
+const P={shirts:{press:["$2.50","per shirt, ready in 48 hours"],dry:["$4.00","per shirt, ready in 48 hours"]},
+bedding:{press:["$18","per duvet, any size"],dry:["$24","per duvet, any size"]},
+suits:{press:["Dry clean only","suits are not washed"],dry:["$14","per two-piece suit"]},
+weight:{press:["$1.80 per lb","10 lb minimum"],dry:["n/a","choose wash & press"]}};
+const N={shirts:"Shirts",bedding:"Bedding",suits:"Suits",weight:"By weight"},H={press:"Wash & press",dry:"Dry clean"};
+let what=null,how=null;
+function show(){if(!what||!how)return;const [p,n]=P[what][how];document.getElementById("rlabel").textContent=N[what]+" · "+H[how];document.getElementById("rprice").textContent=p;document.getElementById("rnote").textContent=n;document.getElementById("result").classList.add("show")}
+document.querySelectorAll("[data-what]").forEach(b=>b.onclick=()=>{what=b.dataset.what;document.querySelectorAll("[data-what]").forEach(x=>x.classList.toggle("on",x===b));show()});
+document.querySelectorAll("[data-how]").forEach(b=>b.onclick=()=>{how=b.dataset.how;document.querySelectorAll("[data-how]").forEach(x=>x.classList.toggle("on",x===b));show()});
+</script>
+</body></html>

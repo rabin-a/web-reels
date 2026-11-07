@@ -1,0 +1,14 @@
+{
+  "site": "http://localhost:8765",
+  "read_on": "2026-11-07",
+  "facts": [
+    { "id": "two-taps", "claim": "The price finder takes two taps.", "url": "http://localhost:8765/prices.html", "quote": "Two taps: what we are cleaning, then how." },
+    { "id": "shirt-press", "claim": "A shirt costs $2.50 washed and pressed.", "url": "http://localhost:8765/prices.html", "quote": "Shirt $2.50 $4.00" },
+    { "id": "duvet", "claim": "A duvet of any size costs $18 washed, $24 dry cleaned.", "url": "http://localhost:8765/prices.html", "quote": "Duvet, any size $18 $24" },
+    { "id": "turnaround", "claim": "Most orders are back within 48 hours of pickup.", "url": "http://localhost:8765/about.html", "quote": "Most orders are back at your door within 48 hours of pickup." },
+    { "id": "free-pickup", "claim": "Pickup and delivery are free on orders over $30.", "url": "http://localhost:8765/", "quote": "Free pickup and delivery on orders over $30." },
+    { "id": "pickup-fee", "claim": "Below $30, pickup costs $4.", "url": "http://localhost:8765/", "quote": "Below $30, pickup costs $4." },
+    { "id": "price-guide", "claim": "Prices are a guide, confirmed at pickup.", "url": "http://localhost:8765/terms.html", "quote": "Prices on this site are a guide. We confirm the final price at pickup, before we clean anything." },
+    { "id": "family", "claim": "Family-run since 2011.", "url": "http://localhost:8765/about.html", "quote": "Family-run since 2011" }
+  ]
+}

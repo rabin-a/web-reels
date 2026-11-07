@@ -1,0 +1,38 @@
+{
+  "name": "Juniper Lane Laundry",
+  "domain": "juniperlane.example",
+  "site_url": "http://localhost:8765",
+  "language": "English",
+  "language_code": "en-US",
+  "colors": {
+    "primary": "#1F6F5C",
+    "accent": "#F2B544",
+    "ink": "#14211D"
+  },
+  "logo": "logo.svg",
+  "logo_plate": "#ffffff",
+  "fonts": [],
+  "font_fallback": ["Helvetica Neue", "Arial", "sans-serif"],
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": null,
+    "model": "eleven_v3",
+    "stability": 0.5
+  },
+  "music": null,
+  "disclaimers": {
+    "short": "Prices are a guide; the final price is confirmed at pickup.",
+    "long": "Juniper Lane Laundry is a fictional business made for the web-reels demo. Prices are a guide; the final price is confirmed at pickup. The voice is AI-generated.",
+    "ai_label": "AI voice"
+  },
+  "end_card": {
+    "tagline": "Laundry and dry cleaning in Brookfield"
+  },
+  "post": {
+    "time": "18:30",
+    "timezone": "America/New_York",
+    "platforms": ["tiktok", "instagram", "facebook", "youtube"]
+  },
+  "limits": { "min_seconds": 15, "max_seconds": 30 },
+  "decorations": { "sparks": false, "garland": false }
+}

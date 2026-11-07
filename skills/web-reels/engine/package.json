@@ -1,0 +1,12 @@
+{
+  "name": "web-reels-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Engine for the web-reels Claude Code skill: capture, voice, mix, render and check promo reels.",
+  "license": "MIT",
+  "engines": { "node": ">=18.17" },
+  "dependencies": {
+    "playwright-core": "^1.50.0"
+  }
+}

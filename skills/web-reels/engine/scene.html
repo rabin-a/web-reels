@@ -1,0 +1,283 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- The animated reel. render.mjs injects window.__WR (brand, resolved reel spec, voice cues, capture manifest)
+     before this runs, then calls seek(t) once per frame and screenshots the page. Query: ?w=1080&h=1920[&cover=1] -->
+<style id="fonts"></style>
+<style>
+*{margin:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink)}
+#stage{position:absolute;inset:0;overflow:hidden;font-family:var(--font);font-weight:800;color:#fff}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 62%;transform-origin:62% 55%;display:none}
+#bgB{filter:blur(22px) saturate(1.1);transform:scale(1.12)}
+#tint{position:absolute;inset:0}
+#garland{position:absolute;left:0;top:0;pointer-events:none}
+#sparks i{position:absolute;border-radius:50%;background:var(--accent);box-shadow:0 0 12px 3px color-mix(in srgb,var(--accent) 80%,transparent)}
+#logoPlate{position:absolute;background:var(--plate);display:flex;align-items:center;box-shadow:var(--plate-shadow)}
+#logoPlate img{display:block;height:100%;width:auto}
+#caps{position:absolute;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.14em}
+.ln{white-space:nowrap;line-height:1.3;padding:.02em .24em .06em;border-radius:.16em;background:var(--primary);color:var(--on-primary);box-shadow:0 .08em .32em rgba(0,0,0,.45);transform-origin:left center}
+.ln.accent{background:var(--accent);color:var(--on-accent)}
+.ln.ink{background:var(--ink);color:#fff}
+.ln.light{background:#fff;color:var(--primary)}
+#phone{position:absolute;background:#0b0d11;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 2px #333}
+#screen{position:absolute;overflow:hidden;background:var(--paper)}
+#screen img{position:absolute;left:0;top:0;transform-origin:0 0;display:none}
+#ring{position:absolute;border:solid var(--accent);display:none}
+#rip{position:absolute;border-radius:50%;border:solid var(--primary);background:color-mix(in srgb,var(--primary) 25%,transparent);display:none}
+#note{position:absolute;background:color-mix(in srgb,var(--ink) 86%,transparent);color:#fff;text-align:left;line-height:1.35;border-radius:.5em;padding:.35em .7em;display:none}
+#end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--primary) 82%,#fff) 0,var(--primary) 70%,var(--primary-dark) 100%)}
+#endPhoto{position:absolute;left:0;right:0;bottom:0;width:100%;height:34%;object-fit:cover;object-position:20% 92%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 45%)}
+#endPlate,#url,#tag,#greet,#endNote{position:relative}
+#endPlate{background:var(--plate);display:flex;align-items:center;justify-content:center}
+#endPlate img{display:block;width:100%;height:auto}
+#url{color:#fff;white-space:nowrap}
+#greet{color:var(--accent);white-space:nowrap;line-height:1.25}
+#tag{color:#fff;white-space:nowrap;line-height:1.3;display:none}
+.kick{display:table;margin:0 auto .12em;padding:.04em .45em .08em;border-radius:.2em;background:var(--ink);color:#fff;font-size:.5em}
+#endNote{color:#fff;opacity:.95;line-height:1.35}
+</style></head>
+<body><div id="stage">
+<img class="bg" id="bgA" alt=""><img class="bg" id="bgB" alt="">
+<div id="tint"></div><div id="sparks"></div>
+<div id="phone"><div id="screen"><div id="ring"></div><div id="rip"></div></div></div>
+<div id="caps"></div>
+<div id="note"></div>
+<div id="end"><img id="endPhoto" alt=""><div id="endPlate"><img id="endLogo" alt=""></div><div id="url"></div><div id="tag"></div><div id="greet"></div><div id="endNote"></div></div>
+<canvas id="garland"></canvas>
+<div id="logoPlate"><img id="logo" alt=""></div>
+</div>
+<script>
+const D = window.__WR;
+const q = new URLSearchParams(location.search), W = +q.get("w") || 1080, H = +q.get("h") || 1920, asp = H / W;
+const tall = asp > 1.5, fourfive = asp > 1.1 && asp <= 1.5, side = !tall && !fourfive;
+const U = Math.min(W, H) / 1080, $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), ease = (x) => { x = clamp(x); return 1 - Math.pow(1 - x, 3); }, lerp = (a, b, p) => a + (b - a) * p;
+const rand = ((s) => () => (s = (s * 16807) % 2147483647) / 2147483647)(4242);
+const B = D.brand, R = D.reel, M = D.man, VW = D.viewport.w, VHP = D.viewport.h;
+
+// Brand: language, colours, fonts, logo.
+document.documentElement.lang = B.lang;
+$("fonts").textContent = D.fontCss;
+const css = document.documentElement.style, C = B.colors;
+for (const [k, v] of Object.entries({ primary: C.primary, "primary-dark": C.primary_dark, accent: C.accent, ink: C.ink, paper: C.paper, "on-primary": C.text_on_primary, "on-accent": C.text_on_accent, font: D.fontFamily,
+  plate: B.logoPlate || "transparent", "plate-shadow": B.logoPlate ? "0 8px 28px rgba(0,0,0,.35)" : "none" })) css.setProperty("--" + k, v);
+$("logo").src = $("endLogo").src = B.logoUrl;
+$("logo").alt = $("endLogo").alt = B.name;
+
+// Layout. Tall frames keep text inside the TikTok/Reels safe zone (clear of the bottom caption area and side buttons).
+const gh = (tall ? 96 : 84) * U;
+const LP = { h: (tall ? 100 : side ? 82 : 84) * U, x: tall ? 0.06 * W : 0.05 * W, y: tall ? 0.07 * H : side ? gh * 1.15 : gh * 1.05 };
+const CAP = tall ? { x: .06 * W, y: .135 * H, w: .8 * W, h: .2 * H } : fourfive ? { x: .06 * W, y: .135 * H, w: .86 * W, h: .2 * H } : { x: .05 * W, y: .24 * H, w: .5 * W, h: .56 * H };
+const HOOK = tall ? { x: .06 * W, y: .135 * H, w: .8 * W, h: .26 * H } : fourfive ? { x: .06 * W, y: .135 * H, w: .86 * W, h: .3 * H } : { x: .05 * W, y: .17 * H, w: .56 * W, h: .36 * H };
+const MID = { x: HOOK.x, y: .2 * H, w: HOOK.w, h: tall ? .42 * H : .6 * H };
+const PW = tall ? .66 * W : fourfive ? .54 * W : .42 * Math.min(W, H), BZ = PW * .028, PH = PW * VHP / VW;
+const PX = side ? (W > H ? .74 * W : .76 * W) - PW / 2 : (W - PW) / 2, PY = tall ? .345 * H : fourfive ? .345 * H : Math.max(.1 * H, (H - PH) / 2 + gh * .4);
+const VB = tall ? .81 * H : H; // lowest visible screen line
+const SCW = PW - 2 * BZ, SCH = PH - 2 * BZ, K = SCW / VW, VH = Math.min(SCH, VB - PY - BZ);
+Object.assign($("phone").style, { left: PX + "px", top: PY + "px", width: PW + "px", height: PH + "px", borderRadius: PW * .11 + "px" });
+Object.assign($("screen").style, { left: BZ + "px", top: BZ + "px", width: SCW + "px", height: SCH + "px", borderRadius: PW * .09 + "px" });
+Object.assign($("logoPlate").style, { left: LP.x + "px", top: LP.y + "px", height: LP.h + "px", padding: LP.h * .17 + "px " + LP.h * .28 + "px", borderRadius: LP.h * .22 + "px" });
+const n = $("note");
+if (R.note) {
+  n.textContent = R.note.text;
+  n.style.fontSize = (tall || fourfive ? 38 : W > H ? 34 : 32) * U + "px";
+  if (side) Object.assign(n.style, { left: .05 * W + "px", width: .46 * W + "px", bottom: .08 * H + "px" });
+  else Object.assign(n.style, { left: .08 * W + "px", width: .84 * W + "px", bottom: tall ? .185 * H + "px" : .03 * H + "px" });
+}
+
+// Background: a CSS gradient, or an image (optionally a separate wide image) with a slow zoom, blur and tint steps.
+const BG = R.bg;
+if (BG.image) {
+  const src = W >= H && BG.imageWide ? BG.imageWide : BG.image;
+  for (const id of ["bgA", "bgB"]) { $(id).src = src; $(id).style.display = "block"; }
+} else $("stage").style.background = BG.gradient;
+
+// Screen captures: one image per capture, drawn at page-pixel scale and moved by the camera.
+for (const k in M) {
+  if (k.startsWith("_")) continue;
+  const im = document.createElement("img");
+  im.id = "cap_" + k; im.alt = ""; im.src = D.captures[k]; im.style.width = VW + "px";
+  $("screen").insertBefore(im, $("ring"));
+}
+
+// Decorations: floating sparks, and a marigold garland across the top (festive themes; both off by default).
+const SP = [];
+if (R.decorations.sparks) for (let i = 0; i < 46; i++) {
+  const e = document.createElement("i"), s = (3 + rand() * 7) * U;
+  e.style.width = e.style.height = s + "px"; $("sparks").append(e);
+  SP.push({ e, x: rand() * W, y: rand() * H, v: (40 + rand() * 90) * U, ph: rand() * 6.28, sw: (10 + rand() * 26) * U });
+}
+function marigold(c, x, y, r, seed) {
+  const R2 = ((s) => () => (s = (s * 48271) % 2147483647) / 2147483647)(seed * 97 + 11);
+  const rings = [[1, 15, "#e77600"], [.82, 13, "#f58a00"], [.62, 11, "#ff9f0a"], [.42, 8, "#ffb61e"], [.22, 5, "#ffcd3c"]];
+  for (const [k, p, col] of rings) {
+    const off = R2() * 6.28;
+    for (let i = 0; i < p; i++) {
+      const a = off + i / p * 6.283, pr = r * k * .46, d = r * k * .62;
+      c.beginPath(); c.ellipse(x + Math.cos(a) * d, y + Math.sin(a) * d, pr * .8, pr * .56, a, 0, 6.283);
+      c.fillStyle = col; c.fill(); c.lineWidth = Math.max(.6, r * .022); c.strokeStyle = "rgba(140,60,0,.42)"; c.stroke();
+    }
+  }
+  c.beginPath(); c.arc(x, y, r * .14, 0, 6.283); c.fillStyle = "#c96400"; c.fill();
+}
+if (R.decorations.garland) {
+  const cv = $("garland"); cv.width = W; cv.height = gh * 2;
+  const c = cv.getContext("2d"), r = gh * .27, swags = Math.max(1, Math.round(W / (420 * U))), sw = W / swags;
+  let s = 1;
+  for (let j = 0; j < swags; j++) {
+    const m = Math.round(sw / (r * 1.35));
+    for (let i = 0; i <= m; i++) { const p = i / m; marigold(c, j * sw + p * sw, r * .7 + Math.sin(p * Math.PI) * gh * .62, r, s++); }
+  }
+}
+
+// Captions: groups of lines that pop in at their own times. Every line in a group gets the same size unless it has
+// a size factor, and the stack is shrunk to fit its box.
+const cap = $("caps"), meas = document.createElement("span");
+meas.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font-size:100px;padding:0 .24em";
+$("stage").append(meas);
+const w100 = (s) => { meas.textContent = s; return meas.getBoundingClientRect().width; };
+let built = null;
+function build(g, boxOverride) {
+  cap.innerHTML = "";
+  const box = boxOverride || (g.place === "middle" ? MID : g.place === "hook" ? HOOK : CAP);
+  Object.assign(cap.style, { left: box.x + "px", top: box.y + "px", width: box.w + "px", height: box.h + "px" });
+  const maxF = (tall ? 128 : side ? (W > H ? 104 : 74) : 92) * U;
+  let fs = g.lines.map((l) => Math.min(maxF * (l.size || 1), 100 * box.w / w100(l.text) * (l.size || 1)));
+  const base = Math.min(...g.lines.map((l, i) => (l.size ? 1e9 : fs[i])));
+  fs = g.lines.map((l, i) => (l.size ? fs[i] : base));
+  const hh = fs.reduce((a, b) => a + b * 1.5, 0), k = Math.min(1, box.h / hh);
+  g.nodes = g.lines.map((l, i) => {
+    const d = document.createElement("div");
+    d.className = "ln " + (l.look === "primary" ? "" : l.look); d.textContent = l.text; d.style.fontSize = fs[i] * k + "px";
+    cap.append(d); return d;
+  });
+  built = g;
+}
+
+// Camera over the captures: each shot names a capture, the page y to centre, the zoom, an optional ringed box and tap.
+const SHOTS = R.shots;
+const shotAt = (t) => { let s = null; for (const x of SHOTS) if (t >= x.from) s = x; return s; };
+window.VIEW = null;
+function seek(t) {
+  const g = R.captions.find((s) => t >= s.from && t < s.to), endOn = t >= R.end.from, onPhone = t >= R.phoneFrom && !endOn;
+  if (BG.image) {
+    const zt = BG.zoomUntil ? clamp(t / BG.zoomUntil) : clamp(t / R.total);
+    $("bgA").style.transform = `scale(${1.04 + .14 * zt})`;
+    const blurOn = BG.blurFrom != null && t >= BG.blurFrom;
+    $("bgA").style.opacity = blurOn ? 0 : 1; $("bgB").style.opacity = blurOn ? 1 : 0;
+    const tn = (BG.tint || []).find((x) => t < x.until);
+    $("tint").style.background = tn ? tn.css : "transparent";
+  }
+  SP.forEach((s) => {
+    const y = ((s.y - s.v * t) % H + H) % H, x = s.x + Math.sin(t * 1.7 + s.ph) * s.sw;
+    s.e.style.transform = `translate(${x}px,${y}px)`; s.e.style.opacity = .25 + .75 * Math.abs(Math.sin(t * 2.4 + s.ph));
+  });
+  $("sparks").style.display = endOn ? "none" : "block";
+  if (g !== built) { if (g) build(g); else { cap.innerHTML = ""; built = null; } }
+  if (g) g.lines.forEach((l, i) => {
+    const p = ease((t - l.at) / .16), o = g.nodes[i], over = p < 1 ? 1 + .16 * (1 - p) : 1;
+    o.style.opacity = t < l.at ? 0 : 1;
+    o.style.transform = `translateY(${(1 - p) * 30 * U}px) scale(${over}) rotate(${i % 2 ? .5 : -.7}deg)`;
+  });
+  $("phone").style.display = onPhone ? "block" : "none";
+  window.VIEW = null;
+  if (onPhone) {
+    const ph = ease((t - R.phoneFrom) / .3);
+    $("phone").style.transform = `translateY(${(1 - ph) * H * .5}px)`;
+    const s = shotAt(t) || SHOTS[0], P = clamp((t - s.from) / (s.dur || 1.6)), e = ease(P);
+    const z = lerp(s.z0, s.z, e), py = lerp(s.y0, s.y, e), sc2 = K * z, vh = VH / sc2;
+    const cx = s.cx ?? VW / 2, x = clamp(cx - VW / 2 / z, 0, VW - VW / z), top = clamp(py - vh / 2, 0, Math.max(0, M[s.img].h - vh));
+    for (const k in M) if (!k.startsWith("_")) $("cap_" + k).style.display = k === s.img ? "block" : "none";
+    $("cap_" + s.img).style.transform = `scale(${sc2}) translate(${-x}px,${-top}px)`;
+    window.VIEW = { img: s.img, x, y: top, w: VW / z, h: vh, box: s.box, settled: P >= 1 };
+    const rg = $("ring"), b = s.box, bp = ease((t - s.from - (s.dur || .3) * .7) / .18);
+    if (b && bp > 0) {
+      rg.style.display = "block";
+      Object.assign(rg.style, { left: (b.x - x) * sc2 + "px", top: (b.y - top) * sc2 + "px", width: b.w * sc2 + "px", height: b.h * sc2 + "px", borderWidth: 6 * U + "px",
+        borderRadius: 14 * sc2 + "px", opacity: bp, boxShadow: `0 0 0 9999px rgba(0,0,0,${s.dim ?? .26})` });
+    } else rg.style.display = "none";
+    const rp = $("rip");
+    if (s.tap != null && b && t >= s.tap && t < s.tap + .3) {
+      const a = (t - s.tap) / .3, rr = (40 + 110 * a) * U;
+      rp.style.display = "block";
+      Object.assign(rp.style, { width: rr * 2 + "px", height: rr * 2 + "px", left: (b.x + b.w / 2 - x) * sc2 - rr + "px", top: (b.y + b.h / 2 - top) * sc2 - rr + "px", borderWidth: 6 * U + "px", opacity: 1 - a });
+    } else rp.style.display = "none";
+  }
+  $("note").style.display = R.note && t >= R.note.from && t < R.note.to ? "block" : "none";
+  $("end").style.display = endOn ? "flex" : "none";
+  $("logoPlate").style.display = endOn ? "none" : "flex";
+  if (endOn) {
+    const E = R.end, a = ease((t - E.from) / .22), u = ease((t - E.urlAt) / .18);
+    $("endPlate").style.transform = `scale(${.82 + .18 * a})`;
+    $("url").style.opacity = u; $("url").style.transform = `scale(${1.1 - .1 * u})`;
+    if (E.tag) $("tag").style.opacity = ease((t - (E.tagAt ?? E.urlAt)) / .18);
+    if (E.teaser) { const gg = ease((t - E.teaser.at) / .18); $("greet").style.opacity = t < E.teaser.at ? 0 : 1; $("greet").style.transform = `scale(${1.25 - .25 * gg})`; }
+  }
+}
+
+// End card: logo, address, optional tag line, the teaser for the next reel (kicker pill + accent line), small print.
+function layoutEnd() {
+  if (!side && BG.image && R.end.photo) $("endPhoto").src = $("bgA").src; else $("endPhoto").style.display = "none";
+  Object.assign($("endPlate").style, { width: (tall ? .76 * W : fourfive ? .72 * W : W > H ? .44 * W : .68 * W) + "px", padding: (tall ? 44 : side ? 30 : 36) * U + "px " + (tall ? 52 : 40) * U + "px", borderRadius: 30 * U + "px" });
+  const endW = tall ? .86 * W : W > H ? .6 * W : .88 * W, fit = (s, f) => Math.min(f, f * endW / (w100(s) * f / 100));
+  $("url").textContent = R.end.url;
+  $("url").style.fontSize = fit(R.end.url, (tall ? 96 : W > H ? 88 : 80) * U) + "px"; $("url").style.marginTop = (tall ? 36 : 20) * U + "px";
+  if (R.end.teaser) {
+    const T = R.end.teaser, g = $("greet");
+    g.textContent = T.text; g.style.fontSize = fit(T.text, (tall ? 120 : W > H ? 92 : 88) * U) + "px"; g.style.marginTop = (tall ? 10 : 0) * U + "px";
+    if (T.kicker) { const k = document.createElement("span"); k.className = "kick"; k.textContent = T.kicker; g.prepend(k); }
+  } else $("greet").style.display = "none";
+  if (R.end.tag) { const tg = $("tag"); tg.textContent = R.end.tag; tg.style.display = "block"; tg.style.fontSize = fit(R.end.tag, (tall ? 54 : W > H ? 46 : 44) * U) + "px"; tg.style.marginTop = (tall ? 14 : 6) * U + "px"; }
+  const en = $("endNote");
+  en.textContent = R.end.note || ""; en.style.fontSize = (tall || fourfive ? 38 : W > H ? 34 : 32) * U + "px"; en.style.maxWidth = endW + "px"; en.style.marginTop = (tall ? 20 : 10) * U + "px";
+  if (tall) $("end").style.paddingBottom = .1 * H + "px"; else $("end").style.paddingTop = gh * .8 + "px";
+}
+
+// Cover: a frame of the video with the cover lines, or (no "at") the background with the lines in the hook box.
+function cover() {
+  const Cv = R.cover;
+  if (Cv.at != null) {
+    seek(Cv.at); $("note").style.display = "none";
+    const fake = { lines: Cv.lines, place: "caption" }; build(fake);
+    fake.nodes.forEach((o, i) => (o.style.transform = `rotate(${i % 2 ? .5 : -.7}deg)`));
+  } else {
+    $("phone").style.display = "none"; $("note").style.display = "none"; $("end").style.display = "none";
+    if (BG.image) { $("bgA").style.transform = "scale(1.08)"; $("bgB").style.opacity = 0; }
+    $("tint").style.background = "linear-gradient(180deg,rgba(0,0,0,.5) 0,rgba(0,0,0,0) 55%)";
+    const fake = { lines: Cv.lines, place: "hook" }; build(fake, side ? { x: .05 * W, y: .3 * H, w: .56 * W, h: .52 * H } : HOOK);
+    fake.nodes.forEach((o, i) => (o.style.transform = `rotate(${i % 2 ? .5 : -.7}deg)`));
+    SP.forEach((s) => { s.e.style.transform = `translate(${s.x}px,${s.y}px)`; s.e.style.opacity = .7; });
+  }
+  if (Cv.greet) { const d = document.createElement("div"); d.className = "ln ink"; d.textContent = Cv.greet; d.style.fontSize = parseFloat(built.nodes[0].style.fontSize) * .62 + "px"; cap.append(d); }
+  built = "cover";
+}
+
+// What check.mjs inspects: every visible piece of text with its box and font size.
+window.layoutAt = (t) => {
+  if (t === "cover") cover(); else seek(t);
+  const out = [];
+  const add = (el, kind) => {
+    if (!el || el.offsetParent === null && getComputedStyle(el).position !== "fixed") return;
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height || +getComputedStyle(el).opacity === 0) return;
+    out.push({ kind, text: el.textContent, x: r.x, y: r.y, w: r.width, h: r.height, font: parseFloat(getComputedStyle(el).fontSize) });
+  };
+  cap.querySelectorAll(".ln").forEach((e) => add(e, "caption"));
+  for (const id of ["note", "url", "tag", "greet", "endNote", "logoPlate"]) add($(id), id);
+  return { W, H, items: out, view: window.VIEW };
+};
+
+window.ready = (async () => {
+  await document.fonts.ready;
+  const all = [...R.captions.flatMap((g) => g.lines.map((l) => l.text)), ...R.cover.lines.map((l) => l.text), R.note?.text, R.end.url, R.end.tag, R.end.note, R.end.teaser?.text, R.end.teaser?.kicker, R.cover.greet].filter(Boolean).join(" ");
+  for (const fam of D.fontFamilies) await document.fonts.load(`800 100px ${fam}`, all).catch(() => {});
+  await Promise.all([...document.images].filter((i) => i.src).map((i) => i.decode().catch(() => {})));
+  layoutEnd();
+  if (q.get("cover")) cover(); else seek(0);
+  return true;
+})();
+window.seek = seek;
+window.TOTAL = R.total;
+</script>
+</body></html>

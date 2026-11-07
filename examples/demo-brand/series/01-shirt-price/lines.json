@@ -1,0 +1,12 @@
+{
+  "lines": [
+    { "id": "h", "text": "Shirts piling up again?", "say": "[curious] Shirts piling up again?" },
+    { "id": "q", "text": "What does it cost to get them washed and pressed?" },
+    { "id": "t", "text": "Two taps on Juniper Lane: shirts, then wash and press.", "claims": ["two-taps"] },
+    { "id": "v", "text": "$2.50 a shirt. Most orders are back in 48 hours.", "say": "Two dollars fifty a shirt. Most orders are back in forty-eight hours.", "claims": ["shirt-press", "turnaround"] },
+    { "id": "p", "text": "Free pickup and delivery on orders over $30.", "say": "Free pickup and delivery on orders over thirty dollars.", "claims": ["free-pickup"] },
+    { "id": "c", "text": "juniperlane.example", "say": "[excited] Juniper Lane dot example." },
+    { "id": "x", "text": "Next time: what does a duvet cost?", "say": "[curious] Next time: what does a duvet cost?" }
+  ],
+  "allow_numbers": ["1", "2"]
+}

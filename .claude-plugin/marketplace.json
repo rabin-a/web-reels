@@ -1,0 +1,22 @@
+{
+  "name": "web-reels",
+  "owner": {
+    "name": "Rabin Acharya",
+    "url": "https://github.com/rbnacharya"
+  },
+  "metadata": {
+    "description": "Promo reels from real screen captures of a business website."
+  },
+  "plugins": [
+    {
+      "name": "web-reels",
+      "source": "./",
+      "description": "Turn any business website into a series of short promo reels built from real screen captures, with fact-checked captions, an AI voice-over and four aspect ratios.",
+      "version": "0.1.0",
+      "author": { "name": "Rabin Acharya" },
+      "homepage": "https://github.com/rbnacharya/web-reels",
+      "license": "MIT",
+      "category": "productivity"
+    }
+  ]
+}
