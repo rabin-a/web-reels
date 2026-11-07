@@ -1,0 +1,54 @@
+{
+  "brand": "Juniper Lane Laundry",
+  "timezone": "America/New_York",
+  "platforms": [
+    "tiktok",
+    "instagram",
+    "facebook",
+    "youtube"
+  ],
+  "reels": [
+    {
+      "n": 1,
+      "slug": "01-shirt-price",
+      "date": "2026-11-09",
+      "time": "18:30",
+      "question": "What does a shirt cost?",
+      "screens": "/prices.html: tap Shirts, tap Wash & press, ring the price; /about.html: ring the 48-hour promise; /: free pickup",
+      "teaser": "What does a duvet cost?",
+      "facts": [
+        "two-taps",
+        "shirt-press",
+        "turnaround",
+        "free-pickup"
+      ]
+    },
+    {
+      "n": 2,
+      "slug": "02-duvet-price",
+      "date": "2026-11-12",
+      "time": "18:30",
+      "question": "What does a duvet cost?",
+      "screens": "/prices.html: tap Bedding, ring the duvet price; /terms.html: prices are a guide",
+      "teaser": "Do you pick up from my door?",
+      "facts": [
+        "duvet",
+        "price-guide"
+      ]
+    },
+    {
+      "n": 3,
+      "slug": "03-free-pickup",
+      "date": "2026-11-15",
+      "time": "18:30",
+      "question": "Do you pick up from my door?",
+      "screens": "/: scroll to pickup, ring the free-pickup and fee lines; /about.html: family-run since 2011",
+      "teaser": "",
+      "facts": [
+        "free-pickup",
+        "pickup-fee",
+        "family"
+      ]
+    }
+  ]
+}

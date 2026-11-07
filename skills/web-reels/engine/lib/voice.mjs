@@ -27,6 +27,7 @@ export async function voice(root, dir, brand, { ids = [], silent = false, force 
     if (ids.length) return ids.includes(l.id);
     const t = takeInfo(dir, l.id);
     if (force || !t) return true;
+    if ((t.source ?? t.said) !== (t.source != null ? l.say ?? l.text : spoken(l))) { console.log(`${l.id}: the line changed since its take; redoing it`); return true; }
     return silent ? false : t.placeholder; // a real take replaces a placeholder; real takes are kept unless named or --force
   });
   if (!todo.length) { console.log(`${name}: every line already has a take (name ids or pass --force to redo).`); return; }
@@ -63,7 +64,7 @@ function placeholder(OUT, l) {
   const duration = +(t + 0.1).toFixed(3);
   for (const ext of [".mp3"]) { const f = path.join(OUT, l.id + ext); if (exists(f)) fs.unlinkSync(f); }
   writeJSON(path.join(OUT, `${l.id}.words.json`), timed);
-  writeJSON(path.join(OUT, `${l.id}.take.json`), { id: l.id, placeholder: true, said: spoken(l), duration, at: new Date().toISOString() });
+  writeJSON(path.join(OUT, `${l.id}.take.json`), { id: l.id, placeholder: true, source: l.say ?? l.text, said: spoken(l), duration, at: new Date().toISOString() });
   console.log(`${l.id}: placeholder ${duration.toFixed(2)} s, ${timed.length} words (silent)`);
 }
 
@@ -91,7 +92,8 @@ export async function transcribe(root, file, brand, key, label) {
 
 async function real(root, OUT, name, l, brand, key) {
   const text = l.say ?? l.text;
-  const body = { text, model_id: brand.voice.model, voice_settings: { stability: brand.voice.stability }, ...(brand.voice.tts_options || {}) };
+  const extra = brand.voice.tts_options || {};
+  const body = { text, model_id: brand.voice.model, ...extra, voice_settings: { stability: brand.voice.stability, ...(extra.voice_settings || {}) } };
   const r = await post(`${API}/text-to-speech/${encodeURIComponent(brand.voice.voice_id)}?output_format=mp3_44100_128`, key, JSON.stringify(body), { "Content-Type": "application/json" });
   const mp3 = path.join(OUT, `${l.id}.mp3`);
   fs.writeFileSync(mp3, Buffer.from(await r.arrayBuffer()));
@@ -101,7 +103,7 @@ async function real(root, OUT, name, l, brand, key) {
   const said = spoken(l), sim = similarity(said, heard.text || "");
   writeJSON(path.join(OUT, `${l.id}.words.json`), words);
   writeJSON(path.join(OUT, `${l.id}.take.json`), {
-    id: l.id, placeholder: false, said, heard: heard.text || "", similarity: sim, duration: +ffprobeDuration(mp3).toFixed(3),
+    id: l.id, placeholder: false, source: l.say ?? l.text, said, heard: heard.text || "", similarity: sim, duration: +ffprobeDuration(mp3).toFixed(3),
     voice_id: brand.voice.voice_id, model: brand.voice.model, at: new Date().toISOString(),
   });
   console.log(`${l.id}: ${sim < 0.8 ? "CHECK " : ""}similarity ${sim.toFixed(2)}\n  said:  ${said}\n  heard: ${heard.text}`);

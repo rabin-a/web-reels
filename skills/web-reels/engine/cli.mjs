@@ -30,7 +30,7 @@ Per reel (<reel> = series/NN-slug or just NN-slug)
   audio <reel>                    mix voice, music (optional) and effects; loudness-normalise; write cues.json
   render <reel> [--formats 9x16,4x5,1x1,16x9] [--no-covers] [--jobs 2] [--draft]
                                   videos to <reel>/video/, covers to <reel>/covers/
-  stills <reel> [--format 9x16] [--at 1,4.5,9]
+  stills <reel> [--format 9x16,1x1] [--at 1,4.5,9]
                                   quick frames to <reel>/check/stills/ (no video encode)
   check <reel>                    automatic checks + contact sheets in <reel>/check/ (report.md, *-sheet.jpg)
   all <reel> [--silent] [--recapture]
