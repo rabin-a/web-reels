@@ -4,10 +4,10 @@
   "description": "Turn any business website into a series of short promo reels (TikTok, Reels, Shorts) built from real screen captures of the site, with fact-checked captions, an AI voice-over and four aspect ratios.",
   "author": {
     "name": "Rabin Acharya",
-    "url": "https://github.com/rbnacharya"
+    "url": "https://github.com/rabin-a"
   },
-  "homepage": "https://github.com/rbnacharya/web-reels",
-  "repository": "https://github.com/rbnacharya/web-reels",
+  "homepage": "https://github.com/rabin-a/web-reels",
+  "repository": "https://github.com/rabin-a/web-reels",
   "license": "MIT",
   "keywords": ["video", "reels", "tiktok", "shorts", "marketing", "playwright", "ffmpeg", "elevenlabs"]
 }

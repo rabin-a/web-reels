@@ -15,7 +15,7 @@ Instagram Reels, YouTube Shorts and Facebook, built from **real screen captures 
 In Claude Code:
 
 ```
-/plugin marketplace add rbnacharya/web-reels
+/plugin marketplace add rabin-a/web-reels
 /plugin install web-reels@web-reels
 ```
 
