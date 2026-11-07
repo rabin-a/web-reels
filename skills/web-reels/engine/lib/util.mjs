@@ -82,7 +82,7 @@ export const normText = (s) => asciiDigits(String(s)).normalize("NFC").replace(/
 export const isoDate = (d) => d.toISOString().slice(0, 10);
 
 // Flags that never take a value.
-export const BOOLEAN_FLAGS = new Set(["silent", "force", "dry-run", "no-covers", "recapture", "help", "follow", "yes", "keep-frames", "draft"]);
+export const BOOLEAN_FLAGS = new Set(["silent", "force", "dry-run", "no-covers", "recapture", "help", "yes", "keep-frames", "draft"]);
 
 export function parseArgs(argv) {
   // --flag, --key value, --key=value; everything else is positional.

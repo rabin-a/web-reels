@@ -1,0 +1,25 @@
+# Post text for 01-shirt-price. Nothing has been posted.
+
+## TikTok / Instagram Reels / Facebook Reels
+Shirts piling up again? 👕
+A shirt washed and pressed is $2.50 at Juniper Lane, and most orders are back within 48 hours. Free pickup and delivery on orders over $30.
+Juniper Lane Laundry is a fictional business made for the web-reels demo. Prices are a guide; the final price is confirmed at pickup. The voice is AI-generated.
+AI voice
+#laundry #drycleaning #brookfield
+
+## YouTube Shorts
+Title: What does a shirt cost at Juniper Lane?
+A shirt washed and pressed is $2.50, and most orders are back within 48 hours. Free pickup and delivery on orders over $30.
+Juniper Lane Laundry is a fictional business made for the web-reels demo. Prices are a guide; the final price is confirmed at pickup. The voice is AI-generated.
+AI voice
+
+## Facebook feed (4x5 / 1x1)
+What does a shirt cost? $2.50, washed and pressed. Free pickup and delivery on orders over $30.
+Juniper Lane Laundry is a fictional business made for the web-reels demo. Prices are a guide; the final price is confirmed at pickup. The voice is AI-generated.
+AI voice
+
+## Where each claim comes from (not for posting; site read 2026-11-07)
+- shirt-press, $2.50: http://localhost:8765/prices.html (price table, "Shirt $2.50 $4.00")
+- turnaround, 48 hours: http://localhost:8765/about.html ("Most orders are back at your door within 48 hours of pickup.")
+- free-pickup, $30: http://localhost:8765/ ("Free pickup and delivery on orders over $30.")
+- two-taps: http://localhost:8765/prices.html ("Two taps: what we are cleaning, then how.")

@@ -1,0 +1,10 @@
+.env
+node_modules/
+**/capture/
+**/audio/
+**/video/
+**/covers/
+**/check/
+**/.build/
+ready-to-post/
+cost-log.jsonl

@@ -196,11 +196,14 @@ export async function resolveSpec(dir, brand, { root, cues, man, placeholder = f
     if (!man[img]) fail(`${where(f)}: no capture "${img}" (captures: ${Object.keys(man).filter((k) => !k.startsWith("_")).join(", ")})`);
     const b = box(s.box, `${f}.box`);
     const y = s.y != null ? ypos(s.y, `${f}.y`) : b ? cy(b) : prev && prev.img === img ? prev.y : 0;
-    const z = s.z ?? 1;
+    // Zoom is capped so the ringed box (with its padding) fits the screen width; a ring cut off at the sides reads as a mistake.
+    const pb = b ? pad(b, s.ring_pad ?? ringPad) : null;
+    const fit = pb ? Math.max(1, 390 / (pb.w + 4)) : Infinity;
+    const z = Math.min(s.z ?? 1, fit);
     shots.push({
       from: time(s.from, `${f}.from`), img, y, y0: s.y0 != null ? ypos(s.y0, `${f}.y0`) : prev && prev.img === img ? prev.y : y,
-      z, z0: s.z0 ?? (prev && prev.img === img ? prev.z : z), cx: s.cx ?? (b ? b.x + b.w / 2 : null), dur: s.dur ?? 0.4,
-      box: b ? pad(b, s.ring_pad ?? ringPad) : null, dim: s.dim ?? 0.26, tap: s.tap != null ? time(s.tap, `${f}.tap`) : null,
+      z, z0: Math.min(s.z0 ?? (prev && prev.img === img ? prev.z : z), Math.max(fit, z)), cx: s.cx ?? (b ? b.x + b.w / 2 : null), dur: s.dur ?? 0.4,
+      box: pb, dim: s.dim ?? 0.26, tap: s.tap != null ? time(s.tap, `${f}.tap`) : null,
     });
   });
   shots.sort((a, b) => a.from - b.from);

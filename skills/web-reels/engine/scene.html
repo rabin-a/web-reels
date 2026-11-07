@@ -30,7 +30,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink)}
 #endPhoto{position:absolute;left:0;right:0;bottom:0;width:100%;height:34%;object-fit:cover;object-position:20% 92%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 45%)}
 #endPlate,#url,#tag,#greet,#endNote{position:relative}
 #endPlate{background:var(--plate);display:flex;align-items:center;justify-content:center}
-#endPlate img{display:block;width:100%;height:auto}
+#endPlate img{display:block;width:100%;height:auto;object-fit:contain}
 #url{color:#fff;white-space:nowrap}
 #greet{color:var(--accent);white-space:nowrap;line-height:1.25}
 #tag{color:#fff;white-space:nowrap;line-height:1.3;display:none}
@@ -219,6 +219,8 @@ function seek(t) {
 // End card: logo, address, optional tag line, the teaser for the next reel (kicker pill + accent line), small print.
 function layoutEnd() {
   if (!side && BG.image && R.end.photo) $("endPhoto").src = $("bgA").src; else $("endPhoto").style.display = "none";
+  // Square or tall logos would otherwise fill the plate width; cap the height per format.
+  $("endLogo").style.maxHeight = (tall ? .1 * H : fourfive ? .12 * H : W > H ? .2 * H : .14 * H) + "px";
   Object.assign($("endPlate").style, { width: (tall ? .76 * W : fourfive ? .72 * W : W > H ? .44 * W : .68 * W) + "px", padding: (tall ? 44 : side ? 30 : 36) * U + "px " + (tall ? 52 : 40) * U + "px", borderRadius: 30 * U + "px" });
   const endW = tall ? .86 * W : W > H ? .6 * W : .88 * W, fit = (s, f) => Math.min(f, f * endW / (w100(s) * f / 100));
   $("url").textContent = R.end.url;

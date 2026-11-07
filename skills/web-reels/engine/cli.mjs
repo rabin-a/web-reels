@@ -75,7 +75,13 @@ async function main() {
       const { readJSON } = await import("./lib/util.mjs");
       const total = readJSON(path.join(dir, "cues.json"), "cues.json (run the audio step first)").total;
       const at = opt.at ? String(opt.at).split(",").map(Number) : Array.from({ length: 8 }, (_, i) => +((i + 0.5) * total / 8).toFixed(2));
-      return stills(root, dir, await brand(), opt.format || "9x16", at, path.join(dir, "check", "stills"));
+      const { FORMATS } = await import("./lib/spec.mjs");
+      const fmts = String(opt.format || opt.formats || "9x16").split(",");
+      for (const f of fmts) if (!FORMATS[f]) throw new UserError(`unknown format "${f}" (use ${Object.keys(FORMATS).join(", ")})`);
+      if (at.some((t) => !Number.isFinite(t) || t < 0 || t > total)) throw new UserError(`--at times must be numbers between 0 and ${total.toFixed(2)} s`);
+      const b = await brand();
+      for (const f of fmts) await stills(root, dir, b, f, at, path.join(dir, "check", "stills"));
+      return;
     }
     case "check": {
       const ok = await (await import("./lib/check.mjs")).check(root, reel("check <reel>"), await brand());

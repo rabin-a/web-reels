@@ -1,0 +1,24 @@
+{
+  "_comment": "Every field is described in reference/brand.md. Colours, logo, disclaimers and voice must be confirmed with the business.",
+  "name": "Business Name",
+  "domain": "example.com",
+  "site_url": "https://example.com/",
+  "language": "English",
+  "language_code": "en-US",
+  "colors": { "primary": "#1F4E79", "accent": "#F2B544", "ink": "#14161A" },
+  "logo": "logo.svg",
+  "logo_plate": "#ffffff",
+  "fonts": [],
+  "font_fallback": ["Helvetica Neue", "Arial", "sans-serif"],
+  "voice": { "provider": "elevenlabs", "voice_id": null, "model": "eleven_v3", "stability": 0.5 },
+  "music": null,
+  "disclaimers": {
+    "short": "Prices and details are a guide; check the website.",
+    "long": "Prices and details are a guide; please check the website before you buy. The voice is AI-generated.",
+    "ai_label": "AI voice"
+  },
+  "end_card": { "tagline": "" },
+  "post": { "time": "18:30", "timezone": "UTC", "platforms": ["tiktok", "instagram", "facebook", "youtube"] },
+  "limits": { "min_seconds": 15, "max_seconds": 35 },
+  "decorations": { "sparks": false, "garland": false }
+}

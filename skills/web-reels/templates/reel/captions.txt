@@ -1,0 +1,18 @@
+# Post text. One block per platform; keep the disclaimer and the AI-voice line. See reference/checks.md.
+
+## TikTok / Instagram Reels / Facebook Reels
+Hook line that matches the video.
+One or two sentences with the answer (only facts from facts.json).
+<long disclaimer from brand.json>
+<AI label from brand.json>
+#hashtag #hashtag
+
+## YouTube Shorts (title, then description)
+Title: The question this reel answers
+<same body, long disclaimer, AI label>
+
+## Facebook feed (4x5 / 1x1)
+<same body, long disclaimer, AI label>
+
+## Where each claim comes from (not for posting)
+- example-fact: https://example.com/page ("The exact sentence on the page")

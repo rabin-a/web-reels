@@ -1,0 +1,11 @@
+{
+  "_comment": "What the voice says. text = the words on screen and in the word-timed captions; say = how to pronounce it (optional). claims = fact ids from facts.json behind any number or promise in text. See reference/spec.md.",
+  "allow_numbers": [],
+  "lines": [
+    { "id": "h", "text": "A short hook question?", "say": "[curious] A short hook question?" },
+    { "id": "q", "text": "The question this reel answers.", "say": "[curious] The question this reel answers." },
+    { "id": "a", "text": "The answer, straight from the site.", "claims": ["example-fact"] },
+    { "id": "c", "text": "example.com" },
+    { "id": "x", "text": "Next time: the next reel's question?", "say": "[curious] Next time: the next reel's question?" }
+  ]
+}

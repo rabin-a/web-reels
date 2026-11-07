@@ -1,0 +1,25 @@
+{
+  "title": "The question this reel answers",
+  "capture": [
+    { "goto": "/" },
+    { "shot": "s0", "boxes": { "headline": { "css": "h1" } } }
+  ],
+  "audio": {
+    "plan": [["h", 0, 1.05], ["q", 0.12, 1.05], ["a", 0.14, 1.05], ["c", 0.2, 1.0], ["x", 0.2, 1.0]],
+    "hits": ["q", "a"],
+    "taps": {},
+    "bell": "x"
+  },
+  "captions": [
+    { "place": "hook", "lines": [["A short hook", -1, "accent"], ["question?", "h.w2"]] },
+    { "from": "q-0.03", "lines": [["The question", -1]] },
+    { "from": "a-0.03", "lines": [["The answer", -1, "accent"]] }
+  ],
+  "shots": [
+    { "from": "q-0.03", "img": "s0", "y": 0 },
+    { "from": "a-0.03", "box": "s0.headline", "z": 1.15, "dim": 0.5 }
+  ],
+  "note": { "from": "a-0.03", "to": "c-0.1" },
+  "end": { "from": "c-0.1", "url_at": "c.w0", "teaser": { "kicker": "Next time", "text": "The next reel's question?", "at": "x" } },
+  "cover": { "at": "a.e-0.3", "lines": [["The question", -1, "accent"], ["this reel answers", -1]] }
+}

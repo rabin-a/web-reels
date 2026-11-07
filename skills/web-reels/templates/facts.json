@@ -1,0 +1,8 @@
+{
+  "_comment": "Every claim a reel makes, with the page it came from and the exact quote. `check` looks the quote up in research/pages. See reference/checks.md.",
+  "site": "https://example.com/",
+  "read_on": "YYYY-MM-DD",
+  "facts": [
+    { "id": "example-fact", "claim": "What the reel says, in short", "url": "https://example.com/page", "quote": "The exact sentence on the page" }
+  ]
+}
