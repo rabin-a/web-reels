@@ -7,6 +7,7 @@ Instagram Reels, YouTube Shorts and Facebook, built from **real screen captures 
 - Bold captions, plus an AI voice-over (ElevenLabs) with word-timed captions, a synthesised whoosh/tap/bell, an optional music bed and loudness normalisation
 - An end card with the logo, the domain and a teaser for the next reel
 - Every reel comes in **9x16, 4x5, 1x1 and 16x9**, with a matching cover image for each
+- **Ready-to-paste post text** next to every video (TikTok/Reels, YouTube, Facebook feed), plus a short post for **X** that is checked against the 280-character limit
 - **Fact-checked**: every number on screen has to match a quote saved from the site (`facts.json`), and the disclaimers and AI-voice labels are checked
 - Safe by design: it only opens pages, taps and scrolls. It never types, submits forms, logs in or posts anything
 
@@ -44,7 +45,7 @@ $WR new-reel 01-shirt-price
 $WR all 01-shirt-price --silent                  # capture, placeholder voice, audio, render, check
 $WR stills 01-shirt-price --format 9x16 --at 2,6,10
 $WR voice 01-shirt-price                         # real voice (paid, logged to cost-log.jsonl)
-$WR package                                      # checked reels -> ready-to-post/ + SCHEDULE.md
+$WR package                                      # checked reels -> ready-to-post/ (videos, covers, post text) + SCHEDULE.md
 ```
 
 `$WR help` lists every command and option. The workflow Claude follows is in

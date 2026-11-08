@@ -18,7 +18,7 @@
     "ai_label": "AI voice"
   },
   "end_card": { "tagline": "" },
-  "post": { "time": "18:30", "timezone": "UTC", "platforms": ["tiktok", "instagram", "facebook", "youtube"] },
+  "post": { "time": "18:30", "timezone": "UTC", "platforms": ["tiktok", "instagram", "facebook", "youtube", "x"] },
   "limits": { "min_seconds": 15, "max_seconds": 35 },
   "decorations": { "sparks": false, "garland": false }
 }

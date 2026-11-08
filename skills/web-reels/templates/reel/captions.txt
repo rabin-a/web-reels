@@ -14,5 +14,10 @@ Title: The question this reel answers
 ## Facebook feed (4x5 / 1x1)
 <same body, long disclaimer, AI label>
 
+## X (x.com)
+Hook line. One short sentence with the answer. example.com
+<short disclaimer from brand.json> <AI label from brand.json>
+#hashtag
+
 ## Where each claim comes from (not for posting)
 - example-fact: https://example.com/page ("The exact sentence on the page")

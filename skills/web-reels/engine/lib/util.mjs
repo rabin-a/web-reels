@@ -98,3 +98,29 @@ export function parseArgs(argv) {
   }
   return { pos, opt };
 }
+
+// captions.txt sections: "## Heading" -> body text (blank lines trimmed).
+export function captionSections(text) {
+  const out = {};
+  let head = null;
+  for (const line of text.split("\n")) {
+    const m = line.match(/^##\s+(.+?)\s*$/);
+    if (m) { head = m[1]; out[head] = []; } else if (head) out[head].push(line);
+  }
+  for (const k of Object.keys(out)) out[k] = out[k].join("\n").trim();
+  return out;
+}
+export const findSection = (secs, re) => Object.entries(secs).find(([k]) => re.test(k))?.[1];
+
+// X (x.com) counts characters with weights: most scripts up to U+10FF (Latin, Devanagari, Arabic...) count 1,
+// others (CJK, emoji) count 2, and every link counts 23. Limit 280 for a normal account.
+export function xWeight(text) {
+  const URL = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/\S*)?/gi;
+  let n = 0;
+  const rest = text.normalize("NFC").replace(URL, () => { n += 23; return ""; });
+  for (const ch of rest) {
+    const c = ch.codePointAt(0);
+    n += c <= 4351 || (c >= 8192 && c <= 8205) || (c >= 8208 && c <= 8223) || (c >= 8242 && c <= 8247) ? 1 : 2;
+  }
+  return n;
+}

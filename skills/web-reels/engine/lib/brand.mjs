@@ -15,7 +15,7 @@ export const DEFAULTS = {
   fonts: [],
   font_fallback: ["sans-serif"],
   end_card: { tagline: null },
-  post: { time: "19:00", timezone: null, platforms: ["tiktok", "instagram", "facebook", "youtube"] },
+  post: { time: "19:00", timezone: null, platforms: ["tiktok", "instagram", "facebook", "youtube", "x"] },
   limits: { min_seconds: 15, max_seconds: 35 },
   audio: { lufs: -14, true_peak: -1.5, music_db: -5, duck_db: -17, sfx: true },
   decorations: { sparks: false, garland: false },

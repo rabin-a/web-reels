@@ -88,7 +88,9 @@ Edit `series/01-shirt-price/` (see `reference/spec.md` and `examples/demo-brand/
 - `reel.json`: `capture` steps (goto/tap/shot with named element boxes), the `audio` plan (gaps, tempo, hits,
   taps), caption groups, camera `shots` that ring and zoom on the element the voice is talking about at that
   moment, the end card with the teaser, and the cover.
-- `captions.txt`: post text per platform, with the long disclaimer, the AI label, and where each claim comes from.
+- `captions.txt`: post text per platform (`## TikTok / Instagram Reels / Facebook Reels`, `## YouTube Shorts`,
+  `## Facebook feed`, `## X (x.com)`), with the long disclaimer, the AI label, and where each claim comes from.
+  The X post must fit in 280 characters (links count 23), so it carries the short disclaimer and the AI label.
 
 ### 5. Build, look and fix
 
@@ -123,7 +125,8 @@ wr package
 ```
 
 Copies every reel whose check passed into `ready-to-post/` (dated folders, all formats, covers, captions) with
-`SCHEDULE.md`. Placeholder-voice builds are skipped unless `--force`, and are marked "do not post". Tell the
+`SCHEDULE.md`. Next to each video it writes a paste-ready description with the same name (`…-9x16.txt` for
+`…-9x16.mp4`: Reels/TikTok text; 16x9: YouTube text; 4x5 and 1x1: Facebook feed text) and one `…-X.txt` post. Placeholder-voice builds are skipped unless `--force`, and are marked "do not post". Tell the
 user what is ready, what still needs attention, and how to label the AI voice on each platform
 (`reference/checks.md`). Do not post it yourself.
 

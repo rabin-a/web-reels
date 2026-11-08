@@ -18,6 +18,12 @@ What does a shirt cost? $2.50, washed and pressed. Free pickup and delivery on o
 Juniper Lane Laundry is a fictional business made for the web-reels demo. Prices are a guide; the final price is confirmed at pickup. The voice is AI-generated.
 AI voice
 
+## X (x.com)
+Shirts piling up again? 👕 A shirt washed and pressed is $2.50 at Juniper Lane, back within 48 hours. localhost:8765
+Fictional demo business. Prices are a guide; the final price is confirmed at pickup.
+AI voice
+#laundry
+
 ## Where each claim comes from (not for posting; site read 2026-11-07)
 - shirt-press, $2.50: http://localhost:8765/prices.html (price table, "Shirt $2.50 $4.00")
 - turnaround, 48 hours: http://localhost:8765/about.html ("Most orders are back at your door within 48 hours of pickup.")

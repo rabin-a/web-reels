@@ -42,11 +42,14 @@ calling a reel done.
 |-------|-------|
 | Short disclaimer not on screen (note or end card) | error |
 | `captions.txt` missing the long disclaimer or the AI label | error |
+| X post (`## X` section) over 280 characters, or missing the short disclaimer or the AI label | error |
+| No `## X` section in `captions.txt` | warning |
 
 Platform labels for AI voice (do this when posting; the reel cannot set them):
 
 - **TikTok**: turn on "AI-generated content" in the post settings.
 - **Instagram / Facebook**: add the "AI info" label when Meta asks or offers it.
+- **X**: the AI label is in the post text; add X's AI/synthetic media label if the upload screen offers one.
 - **YouTube Shorts**: answer "Yes" to "Altered or synthetic content" only if the voice could pass for a real
   person saying something they did not; either way keep "AI voice" in the description.
 

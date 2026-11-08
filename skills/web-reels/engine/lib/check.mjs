@@ -5,7 +5,7 @@ import path from "node:path";
 import { launch } from "./browser.mjs";
 import { FORMATS, loadLines } from "./spec.mjs";
 import { sceneData, openScene, outName } from "./render.mjs";
-import { readJSON, exists, mkdirp, run, numbersIn, normText, ffprobeDuration } from "./util.mjs";
+import { readJSON, exists, mkdirp, run, numbersIn, normText, ffprobeDuration, captionSections, findSection, xWeight } from "./util.mjs";
 
 // Facts live in <project>/facts.json: { "facts": [{ "id", "claim", "url", "quote" }] }.
 // Quotes are matched against the page text saved by `research` (research/pages.json -> research/pages/*.txt).
@@ -124,6 +124,15 @@ export async function check(root, dir, brand) {
   else {
     const t = normText(fs.readFileSync(capFile, "utf8"));
     for (const [k, v] of [["long disclaimer", brand.disclaimers.long], ["AI label", brand.disclaimers.ai_label]]) if (v && !t.includes(normText(v))) R.err(`captions.txt is missing the ${k}: "${v}"`);
+    // The X post is short, so it carries the short disclaimer and the AI label instead of the long one.
+    const x = findSection(captionSections(fs.readFileSync(capFile, "utf8")), /^X\b/);
+    if (!x) R.warn('captions.txt has no "## X (x.com)" section; package will not write an X post');
+    else {
+      const w = xWeight(x);
+      if (w > 280) R.err(`X post is ${w}/280 characters (links count 23)`);
+      else R.ok(`X post ${w}/280 characters`);
+      for (const [k, v] of [["short disclaimer", brand.disclaimers.short], ["AI label", brand.disclaimers.ai_label]]) if (v && !normText(x).includes(normText(v))) R.err(`X post is missing the ${k}: "${v}"`);
+    }
   }
 
   const mix = path.join(dir, "audio", "mix.wav");

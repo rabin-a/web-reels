@@ -25,7 +25,7 @@ command and lists all problems at once. Paths are relative to `brand/`. `init-br
     "ai_label": "AI voice"
   },
   "end_card": { "tagline": "Laundry and dry cleaning in Brookfield" },
-  "post": { "time": "18:30", "timezone": "America/New_York", "platforms": ["tiktok", "instagram", "facebook", "youtube"] },
+  "post": { "time": "18:30", "timezone": "America/New_York", "platforms": ["tiktok", "instagram", "facebook", "youtube", "x"] },
   "limits": { "min_seconds": 15, "max_seconds": 35 },
   "audio": { "lufs": -14, "true_peak": -1.5, "music_db": -5, "duck_db": -17, "sfx": true },
   "decorations": { "sparks": false, "garland": false }
